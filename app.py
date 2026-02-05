@@ -3,6 +3,7 @@ import os
 import pandas as pd
 from reviewer.static_reviewer import review_python_code
 from collections import defaultdict
+from reviewer.ollama_reviewer import review_with_ollama
 
 # ------------------ Page Config ------------------
 st.set_page_config(
@@ -64,6 +65,15 @@ with st.sidebar:
     st.divider()
     path = st.text_input("📁 Project Path", placeholder="/path/to/your/code")
     review_btn = st.button("🚀 Start Deep Review", use_container_width=True)
+    st.divider()
+    st.subheader("🤖 AI Review")
+
+    use_hf = st.checkbox(
+        "Ollama (CodeLlama) Local ReviewS",
+        value=False,
+        help="Uses a local Ollama CodeLlama model for real-time feedback"
+    )
+
 
 # ------------------ Main UI ------------------
 st.title("🔍 Offline AI Code Review Agent")
@@ -152,7 +162,9 @@ if review_btn:
 
             # ... continue with your tabs (Summary, Detailed Issues, etc.) ...
 
-            tab_summary, tab_details, tab_code = st.tabs(["📊 Summary", "🛠️ Detailed Issues", "📝 Raw Code"])
+            tab_summary, tab_details, tab_ai, tab_code = st.tabs(
+                ["📊 Summary", "🛠️ Detailed Issues", "🤖 AI Review", "📝 Raw Code"]
+            )
 
             with tab_summary:
                 if not issues:
@@ -182,6 +194,17 @@ if review_btn:
                                 st.markdown("💡 **Suggested Fix**")
                                 st.code(issue["fixed_code"], language="python")
                                 st.button("📋 Copy Fix", key=f"btn_{rel_path}_{idx}_{sev}")
+            with tab_ai:
+                st.info("🤖 AI review powered by local CodeLlama (Ollama)")
+
+                try:
+                    with st.spinner("Running AI code review locally..."):
+                        ai_review = review_with_ollama(code)
+                    st.markdown(ai_review)
+
+                except Exception as e:
+                    st.error("❌ AI review failed")
+                    st.code(str(e))
 
             with tab_code:
                 st.code(code, language="python", line_numbers=True)
