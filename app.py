@@ -76,7 +76,7 @@ with st.sidebar:
 
 
 # ------------------ Main UI ------------------
-st.title("🔍 Offline AI Code Review Agent")
+st.title("🔍 CodeAuditAi")
 st.markdown("---")
 
 if review_btn:
@@ -122,42 +122,42 @@ if review_btn:
             # ... inside the loop ...
             summary = count_severity(issues)
             
-            # Create 4 columns for the metrics
+            
             m1, m2, m3, m4 = st.columns(4)
 
             with m1:
                 render_metric(
                     label="🔴 High Risk", 
                     value=summary["High"], 
-                    color="#ff4b4b",       # Red text
-                    border_color="#3d1818" # Subtle red border
+                    color="#ff4b4b",       
+                    border_color="#3d1818" 
                 )
 
             with m2:
                 render_metric(
                     label="🟠 Medium Risk", 
                     value=summary["Medium"], 
-                    color="#ffa500",       # Orange text
-                    border_color="#3d2c12" # Subtle orange border
+                    color="#ffa500",       
+                    border_color="#3d2c12" 
                 )
 
             with m3:
                 render_metric(
                     label="🟢 Low Risk", 
                     value=summary["Low"], 
-                    color="#3dd56d",       # Green text
-                    border_color="#123d1b" # Subtle green border
+                    color="#3dd56d",      
+                    border_color="#123d1b"
                 )
 
             with m4:
                 render_metric(
                     label="📊 Total Issues", 
                     value=len(issues), 
-                    color="#e6edf3",       # White/Grey text
-                    border_color="#30363d" # Standard grey border
+                    color="#e6edf3",       
+                    border_color="#30363d" 
                 )
             
-            # Add a little spacer
+            
             st.markdown("<br>", unsafe_allow_html=True)
 
             # ... continue with your tabs (Summary, Detailed Issues, etc.) ...
