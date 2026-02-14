@@ -59,7 +59,7 @@ def get_code_snippet(code, line_no, context=3):
 
 # ------------------ Sidebar Settings ------------------
 with st.sidebar:
-    st.image("https://cdn-icons-png.flaticon.com/512/2103/2103811.png", width=80) # Generic bot icon
+    st.image("https://cdn-icons-png.flaticon.com/512/2103/2103811.png", width=80) 
     st.title("Settings")
     st.info("This agent runs 100% locally. No data leaves this machine.")
     st.divider()
