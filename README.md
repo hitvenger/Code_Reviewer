@@ -1,10 +1,52 @@
 # Code_Reviewer
-Offline AI Code Review Agent (Ollama-Powered)
 
-The Offline AI Code Review Agent is a developer-focused tool designed to analyze Python codebases without relying on cloud services or paid APIs. The project combines traditional static analysis techniques with locally hosted large language models using Ollama, enabling intelligent code review entirely offline. It is built to simulate real-world code review systems while remaining secure, fast, and suitable for academic or restricted environments.
+Hybrid AI-Assisted Static Code Intelligence System for Predictive Bug Detection
 
-This project performs automated code reviews by scanning Python files and identifying common programming issues such as logical errors, resource mismanagement, type risks, portability issues, and code smells. In addition to rule-based detection, it optionally uses a locally running AI model to generate human-like feedback, explain detected issues, scaledown code without compromisingquality and suggest improvements. Since the AI model runs locally, no source code or data ever leaves the user’s machine.
+This project presents a Hybrid AI-Assisted Static Code Intelligence System designed to perform deterministic and AI-driven source code analysis in a completely offline environment. Unlike traditional LLM-based code reviewers that rely entirely on generative outputs, this system integrates compiler-level static analysis, Abstract Syntax Tree (AST) inspection, deterministic rule engines, and GPU-accelerated local large language model inference to provide explainable, validated, and production-aware code review.
 
-The application provides a modern and intuitive user interface built with Streamlit. Users can select a single Python file or an entire project folder for analysis. The results are displayed through a clean dashboard showing severity-based metrics, detailed issue breakdowns, line-highlighted code snippets, and optional AI-generated review comments. Each file is analyzed independently, making it easy to understand and debug large projects.
+The system is capable of analyzing Python-based software repositories to detect structural flaws, runtime vulnerabilities, maintainability issues, and security threats using a multi-stage hybrid analysis pipeline. The objective of the platform is to combine rule-based deterministic analysis with contextual reasoning provided by locally hosted large language models deployed using Ollama, thereby eliminating dependency on external APIs while maintaining inference performance through GPU-enabled execution environments such as Google Colab.
 
-For AI-assisted review, the project integrates with Ollama, which runs open-source code models such as CodeLLaMA or DeepSeek locally. This allows the system to provide natural-language explanations, refactoring suggestions, and high-level code quality feedback without any dependency on external APIs
+
+System Architecture
+
+                User Source Code
+                        ↓
+        Static Rule-Based Analysis Engine
+                        ↓
+        AST Structural Inspection Engine
+                        ↓
+        Hybrid AI Reasoning Layer
+           (Ollama + CodeLlama)
+                        ↓
+        AI-Based Fix Suggestion Module
+                        ↓
+        Compilation-Level Fix Validator
+                        ↓
+        Code Difference Generator
+                        ↓
+        Risk Scoring Engine
+                        ↓
+        Final Review Report
+
+        
+| Component            | Technology Used             |
+| -------------------- | --------------------------- |
+| Frontend Interface   | Streamlit                   |
+| Backend Framework    | FastAPI                     |
+| Static Code Analysis | Python AST Module           |
+| Local LLM Runtime    | Ollama                      |
+| LLM Model            | CodeLlama 7B                |
+| GPU Execution        | Google Colab                |
+| Secure Tunneling     | Ngrok                       |
+| Fix Validation       | Python Compile API          |
+| Diff Generation      | Difflib                     |
+| Risk Scoring         | Custom Weighted Rule Engine |
+| Deployment Mode      | Offline + Remote GPU Hybrid |
+
+
+This platform is suitable for:
+1)Secure offline software review environments
+2)Academic code quality analysis
+3)DevSecOps pre-deployment validation
+4)AI-assisted developer productivity tools
+5)Predictive runtime vulnerability detection
