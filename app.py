@@ -1,9 +1,16 @@
 import streamlit as st
 import os
 import pandas as pd
+from reviewer.ast_engine import ast_analysis
+from reviewer.risk_engine import calculate_risk
+from reviewer.diff_engine import generate_diff
+from reviewer.fix_validator import validate_fix
 from reviewer.static_reviewer import review_python_code
 from collections import defaultdict
 from reviewer.ollama_reviewer import review_with_ollama
+from config import AI_REVIEW_API, AI_TIMEOUT
+import requests
+
 
 # ------------------ Page Config ------------------
 st.set_page_config(
@@ -57,22 +64,42 @@ def get_code_snippet(code, line_no, context=3):
         snippet += f"{prefix}{i+1}: {lines[i]}\n"
     return snippet
 
+def call_ai_review(code: str):
+    response = requests.post(
+        f"{AI_REVIEW_API}/review",
+        json={"code": code},
+        timeout=AI_TIMEOUT
+    )
+    response.raise_for_status()
+    return response.json()["review"]
+
 # ------------------ Sidebar Settings ------------------
 with st.sidebar:
+<<<<<<< HEAD
     st.image("https://cdn-icons-png.flaticon.com/512/2103/2103811.png", width=80) 
+=======
+    st.image(
+        "https://cdn-icons-png.flaticon.com/512/2103/2103811.png",
+        width=80
+    )
+>>>>>>> 5cdd54d (Initial commit - Offline Code Reviewer App)
     st.title("Settings")
-    st.info("This agent runs 100% locally. No data leaves this machine.")
+    st.info("This agent runs locally. AI review is optional.")
     st.divider()
+
     path = st.text_input("📁 Project Path", placeholder="/path/to/your/code")
     review_btn = st.button("🚀 Start Deep Review", use_container_width=True)
+
     st.divider()
     st.subheader("🤖 AI Review")
 
-    use_hf = st.checkbox(
-        "Ollama (CodeLlama) Local ReviewS",
-        value=False,
-        help="Uses a local Ollama CodeLlama model for real-time feedback"
+    use_remote_ai = st.checkbox(
+        "Use GPU AI (Colab)",
+        value=True,
+        help="Uses CodeLlama"
     )
+
+
 
 
 # ------------------ Main UI ------------------
@@ -116,7 +143,11 @@ if review_btn:
         
         with st.container():
             st.markdown(f"### 📄 File: `{rel_path}`")
-            issues = review_python_code(code)
+            static_issues = review_python_code(code)
+            ast_issues = ast_analysis(code)
+
+            issues = static_issues + ast_issues
+
             total_issues += len(issues)
             
             # ... inside the loop ...
@@ -173,6 +204,10 @@ if review_btn:
                     # Create a small dataframe for a quick look
                     df_issues = pd.DataFrame(issues)[["severity", "type", "line", "message"]]
                     st.table(df_issues)
+                risk_score = calculate_risk(summary)
+
+                st.metric("Project Risk Index", risk_score)
+
 
             with tab_details:
                 grouped = defaultdict(list)
@@ -190,22 +225,26 @@ if review_btn:
                                 st.code(snippet, language="python")
                             
                             if issue.get("fixed_code"):
-                                st.markdown("---")
-                                st.markdown("💡 **Suggested Fix**")
-                                st.code(issue["fixed_code"], language="python")
-                                st.button("📋 Copy Fix", key=f"btn_{rel_path}_{idx}_{sev}")
+
+                                if validate_fix(issue["fixed_code"]):
+
+                                    diff = generate_diff(code, issue["fixed_code"])
+
+                                    st.markdown("### Code Difference")
+                                    st.code(diff)
+
             with tab_ai:
-                st.info("🤖 AI review powered by local CodeLlama (Ollama)")
+                st.info("🤖 AI review powered by GPU (Colab + Ollama)")
 
                 try:
-                    with st.spinner("Running AI code review locally..."):
-                        ai_review = review_with_ollama(code)
+                    with st.spinner("Sending code to GPU AI server..."):
+                        ai_review = call_ai_review(code)  # ✅ code is defined here
+
                     st.markdown(ai_review)
 
                 except Exception as e:
                     st.error("❌ AI review failed")
                     st.code(str(e))
-
             with tab_code:
                 st.code(code, language="python", line_numbers=True)
 
