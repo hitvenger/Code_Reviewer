@@ -75,14 +75,10 @@ def call_ai_review(code: str):
 
 # ------------------ Sidebar Settings ------------------
 with st.sidebar:
-<<<<<<< HEAD
-    st.image("https://cdn-icons-png.flaticon.com/512/2103/2103811.png", width=80) 
-=======
     st.image(
         "https://cdn-icons-png.flaticon.com/512/2103/2103811.png",
         width=80
-    )
->>>>>>> 5cdd54d (Initial commit - Offline Code Reviewer App)
+    )    
     st.title("Settings")
     st.info("This agent runs locally. AI review is optional.")
     st.divider()
@@ -253,3 +249,22 @@ if review_btn:
     # Final Footer
     st.balloons()
     st.success(f"✅ Review complete! {total_issues} issues found across {len(files)} files.")
+    st.title("Settings")
+    st.info("This agent runs locally. AI review is optional.")
+    st.divider()
+
+    path = st.text_input("📁 Project Path", placeholder="/path/to/your/code")
+    review_btn = st.button("🚀 Start Deep Review", use_container_width=True)
+
+    st.divider()
+    st.subheader("🤖 AI Review")
+
+    use_remote_ai = st.checkbox(
+        "Use GPU AI (Colab)",
+        value=True,
+        help="Uses CodeLlama"
+    )
+
+
+
+
