@@ -46,7 +46,11 @@ System Architecture
 
 This platform is suitable for:
 1)Secure offline software review environments
+
 2)Academic code quality analysis
+
 3)DevSecOps pre-deployment validation
+
 4)AI-assisted developer productivity tools
+
 5)Predictive runtime vulnerability detection
